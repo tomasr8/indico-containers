@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.10-bullseye
 
 ENV INDICO_VIRTUALENV="/opt/indico/.venv" INDICO_CONFIG="/opt/indico/etc/indico.conf"
 
@@ -12,12 +12,12 @@ USER root
 
 RUN set -ex && \
     apt-get update && \
-    apt-get -y install texlive-xetex libpq-dev postgresql-client vim less python3-virtualenv gcc gettext && \
+    apt-get -y install texlive-xetex libpq-dev postgresql-client vim less gcc gettext && \
     apt-get clean
 
 RUN ["/bin/bash", "-c", "mkdir -p --mode=775 /opt/indico/{etc,tmp,log,cache,archive}"]
 
-RUN virtualenv ${INDICO_VIRTUALENV}
+RUN python -m venv ${INDICO_VIRTUALENV}
 
 RUN ${pip} install --upgrade pip setuptools && \
     ${pip} install uwsgi raven
@@ -48,5 +48,3 @@ RUN chgrp -R 0 /opt/indico
 COPY run_indico.sh run_celery.sh set_user.sh /opt/indico/
 RUN chmod 755 /opt/indico/*.sh
 RUN chmod g=u /etc/passwd
-
-ENV USE_PROXY ${use_proxy}
