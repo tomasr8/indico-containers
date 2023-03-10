@@ -5,7 +5,9 @@ URL=http://localhost:8080/category/0/statistics
 TIMEOUT=120
 
 check_indico_status() {
-    response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null $URL)
+    # response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null $URL)
+    response=$(curl -L --write-out '%{http_code}' $URL)
+    echo ">>>> RESPONSE: $response"
     [[ $response = "200" ]]
 }
 
