@@ -5,7 +5,8 @@ URL=http://localhost:8080/category/0/statistics
 TIMEOUT=120
 
 check_indico_status() {
-    response=$(curl --head --write-out '%{http_code}' --silent --output /dev/null $URL)
+    response=$(curl --write-out '%{http_code}' $URL)
+    echo "Response: $response"
     [[ $response = "200" ]]
 }
 
@@ -27,8 +28,9 @@ until check_indico_status; do
 done
 
 # Print response from server, for clarity
+echo "Response from Indico:"
 curl -L $URL
-echo -e "\n"
+echo ""
 
 # yay!
 echo "Indico seems alive!"

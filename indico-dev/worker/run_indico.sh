@@ -26,8 +26,8 @@ if [ $? -eq 1 ]; then
     python /opt/indico/run_initial_setup.py
 fi
 
-echo "Pulling translations..."
-/opt/indico/pull_translations.sh
+# echo "Pulling translations..."
+# /opt/indico/pull_translations.sh
 
 echo 'Compiling translations...'
 indico i18n compile-catalog

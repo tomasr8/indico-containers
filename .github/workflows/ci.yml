@@ -6,7 +6,7 @@ on:
 
 jobs:
   test-prod:
-    name: Test docker compose
+    name: "[Production setup] Test docker compose"
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
       - name: Test if Indico works
         run: ./test.sh prod
   test-dev:
-    name: Test docker compose
+    name: "[Development setup] Test docker compose"
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
