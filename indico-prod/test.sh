@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# cp indico-web.env.sample indico-web.env
-# sed ...
-
-URL=http://localhost:9090/category/0/statistics
+URL=http://localhost:8080/category/0/statistics
 TIMEOUT=120
 
+cd indico-prod
 # make sure the cluster is down
-docker-compose down
+docker compose down
 # then try to bring it up
-docker-compose up -d
+docker compose up -d
 
 timeout_handler() {
     # SIGALRM caught, let's just exit
@@ -41,6 +39,6 @@ echo 'Indico seems alive!'
 # remove timer
 kill -s TERM $alarm > /dev/null 2>&1
 
-docker-compose down
+docker compose down
 
 exit 0

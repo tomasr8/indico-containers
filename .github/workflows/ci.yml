@@ -2,23 +2,23 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [ci-testing]
 
 jobs:
   test:
-    name: Test docker-compose build
-    runs-on: ubuntu-20.04
+    name: Test docker compose build
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
 
       - name: Prepare config
         run: |
+          cd indico-prod
           pip install yq
-          cp indico.env.sample indico.env
-          ~/.local/bin/yq '. | .services["indico-web"].build = "./indico/worker"' docker-compose.yml > docker-compose.local.yml
+          ~/.local/bin/yq '. | .services["indico-web"].build = "./worker"' docker-compose.yml > docker-compose.local.yml
 
       - name: Build containers
-        run: docker-compose -f docker-compose.local.yml build
+        run: cd indico-prod && docker compose -f docker-compose.local.yml build
 
       - name: Test if Indico works
-        run: ./test.sh
+        run: ./indico-prod/test.sh
