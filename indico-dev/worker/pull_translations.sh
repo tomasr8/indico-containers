@@ -3,7 +3,12 @@
 if [[ -z $TRANSIFEX_API_TOKEN ]]; then
     echo "Transifex API token not provided"
     echo "Pulling translations from a mirror..."
-    cd /opt/indico/src && wget https://test-indico-transifex-mirror.app.cern.ch/translations.zip
+    cd /opt/indico/src
+    wget https://test-indico-transifex-mirror.app.cern.ch/translations.zip
+    if [ $? -ne 0 ]; then
+        echo "Failed to pull from mirror"
+        exit 1
+    fi
     unzip translations.zip
     # Delete existing translations
     rm -R indico/translations/*/

@@ -5,8 +5,7 @@ URL=http://localhost:8080/category/0/statistics
 TIMEOUT=120
 
 check_indico_status() {
-    response=$(curl --write-out '%{http_code}' $URL)
-    echo "Response: $response"
+    response=$(curl -L --write-out '%{http_code}' --silent --output /dev/null $URL)
     [[ $response = "200" ]]
 }
 
@@ -14,7 +13,7 @@ cd $DIR
 # make sure the cluster is down
 docker compose down
 # then try to bring it up
-docker compose up -d
+docker compose up &
 
 start_time="$(date -u +%s)"
 until check_indico_status; do
