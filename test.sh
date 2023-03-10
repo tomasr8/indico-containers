@@ -1,0 +1,39 @@
+#!/bin/bash
+
+DIR="indico-${1:-prod}"
+URL=http://localhost:8080/category/0/statistics
+TIMEOUT=120
+
+check_indico_status() {
+    response=$(curl --head --write-out '%{http_code}' --silent --output /dev/null $URL)
+    [[ $response = "200" ]]
+}
+
+cd $DIR
+# make sure the cluster is down
+docker compose down
+# then try to bring it up
+docker compose up -d
+
+start_time="$(date -u +%s)"
+until check_indico_status; do
+    echo "Waiting for Indico to become available..."
+    sleep 10
+
+    curr_time="$(date -u +%s)"
+    if ((($curr_time - $start_time) > TIMEOUT)); then
+        break
+    fi
+done
+
+# Print response from server, for clarity
+curl -L $URL
+echo -e "\n"
+
+# yay!
+echo "Indico seems alive!"
+
+echo "Shutting down..."
+docker compose down
+
+exit 0
